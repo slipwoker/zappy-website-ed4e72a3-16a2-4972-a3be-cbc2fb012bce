@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>כל מה שצריך לחגיגה אחת מושלמת — Wow show</title>
+    <meta name="description" content="פופקורן, סלאשי, כותנת סוכר, נאצ&#39;וס, קריפס וטורנדו פטייטס — תחנות האוכל של Wow show הופכות כל אירוע לקרנבל צבעוני ומרגש. גלו את כל החבילות שלנו!">
+    <meta name="keywords" content="wow show tickets, תחנות אוכל לאירועים, מתנפחים לילדים, בידור לאירועים, חוויה לילד">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'ed4e72a3-16a2-4972-a3be-cbc2fb012bce',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="כל מה שצריך לחגיגה אחת מושלמת — Wow show">
+    <meta property="og:description" content="פופקורן, סלאשי, כותנת סוכר, נאצ&#39;וס, קריפס וטורנדו פטייטס — תחנות האוכל של Wow show הופכות כל אירוע לקרנבל צבעוני ומרגש. גלו את כל החבילות שלנו!">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="כל מה שצריך לחגיגה אחת מושלמת — Wow show">
+    <meta name="twitter:description" content="פופקורן, סלאשי, כותנת סוכר, נאצ&#39;וס, קריפס וטורנדו פטייטס — תחנות האוכל של Wow show הופכות כל אירוע לקרנבל צבעוני ומרגש. גלו את כל החבילות שלנו!">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      #mic-access-tool-general-button, .mic-access-tool-general-button,
+      #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+      ._access-icon, #mic-access-tool-box, .mic-access-tool-box,
+      #mic-init-access-tool #mic-access-tool-box, div[id*="mic-access-tool-box"], ._access-menu {
+        display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;
+      }
+    </style>
+</head>
+<body>
+
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="[business_phone]" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/wow-show-logo.webp" alt="Wow show" class="logo">
+      </a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="/services">שירותים</a></li><li><a href="/about">אודות</a></li></ul></div>
+
+    
+
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-dark)) !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '50%', 'important');
+          mobileToggle.style.setProperty('transform', 'translateY(-50%)', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '50%', 'important');
+          phoneBtn.style.setProperty('transform', 'translateY(-50%)', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu on button click - use newToggle now
+    newToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = this.querySelector('.hamburger-icon');
+      const closeIcon = this.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    });
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // === WHATSAPP BUTTON VISIBILITY FIX ===
+    // Ensure WhatsApp floating button is hidden on desktop and visible on mobile
+    // IMPORTANT: Only target the floating button by its class, NOT generic wa.me links
+    const handleWhatsAppVisibility = function() {
+      const whatsappBtn = document.querySelector('.whatsapp-float');
+      if (whatsappBtn) {
+        const isDesktop = window.innerWidth >= 769;
+        if (isDesktop) {
+          whatsappBtn.style.setProperty('display', 'none', 'important');
+          whatsappBtn.style.setProperty('visibility', 'hidden', 'important');
+          whatsappBtn.style.setProperty('opacity', '0', 'important');
+          whatsappBtn.style.setProperty('pointer-events', 'none', 'important');
+          console.log('[WhatsApp] Button hidden on desktop');
+        } else {
+          whatsappBtn.style.removeProperty('display');
+          whatsappBtn.style.removeProperty('visibility');
+          whatsappBtn.style.removeProperty('opacity');
+          whatsappBtn.style.removeProperty('pointer-events');
+          console.log('[WhatsApp] Button visible on mobile');
+        }
+      }
+    };
+    
+    // Run on load
+    handleWhatsAppVisibility();
+    
+    // Run on resize with debouncing
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleWhatsAppVisibility, 100);
+    });
+  });
+})();
+
+</script>
+  
+  <main>
+    <section class="services-intro-section" data-layout-spec="שירותים-intro" dir="rtl">
+  <!-- Decorative confetti dots -->
+  <div class="services-intro-confetti" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+      <circle cx="30" cy="40" r="6" fill="#FF7A59" opacity="0.45"></circle>
+      <rect x="80" y="20" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.4" transform="rotate(25 85 25)"></rect>
+      <circle cx="150" cy="60" r="4" fill="#2DD4BF" opacity="0.5"></circle>
+      <rect x="220" y="15" width="8" height="8" rx="2" fill="#FF7A59" opacity="0.35" transform="rotate(-15 224 19)"></rect>
+      <circle cx="300" cy="45" r="7" fill="#8B5CF6" opacity="0.3"></circle>
+      <rect x="360" y="30" width="12" height="6" rx="2" fill="#2DD4BF" opacity="0.4" transform="rotate(10 366 33)"></rect>
+      <circle cx="60" cy="130" r="5" fill="#2DD4BF" opacity="0.35"></circle>
+      <rect x="130" y="150" width="9" height="9" rx="2" fill="#FF7A59" opacity="0.3" transform="rotate(20 134 154)"></rect>
+      <circle cx="250" cy="170" r="4" fill="#8B5CF6" opacity="0.4"></circle>
+      <rect x="330" y="140" width="11" height="7" rx="2" fill="#FF7A59" opacity="0.35" transform="rotate(-20 335 143)"></rect>
+    </svg>
+  </div>
+
+  <div class="services-intro-container">
+    <!-- Centered header area -->
+    <div class="services-intro-header">
+      <span class="services-intro-badge">השירותים שלנו</span>
+      <h2 class="services-intro-title">הכל במקום אחד — חגיגה שלמה מ-<span class="services-intro-highlight">Wow Show</span></h2>
+      <p class="services-intro-lead">אנחנו ב-Wow Show מביאים לכל אירוע את הקסם האמיתי: עמדות אוכל מפנקות, מתנפחים מרהיבים וסביבת חגיגה שיוצרת אווירה של יום כיף בלתי נשכח. מימי הולדת ועד ימי עצמאות — אנחנו הפתרון המלא לחוויה לילד ולמשפחה כולה.</p>
+    </div>
+
+    <!-- Three-column summary strip -->
+    <div class="services-intro-strip">
+      <!-- Card 1: Food Stations -->
+      <article class="services-intro-card">
+        <div class="services-intro-card-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="24" cy="24" r="22" fill="#FFF4EC" stroke="var(--border-light)" stroke-width="1.5"></circle>
+            <path d="M16 32 Q20 20 24 18 Q28 20 32 32" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
+            <circle cx="24" cy="15" r="4" fill="var(--primary)" opacity="0.85"></circle>
+            <path d="M20 32 L28 32" stroke="var(--secondary)" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M18 35 L30 35" stroke="var(--border-light)" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="services-intro-card-body">
+          <h3 class="services-intro-card-title">עמדות אוכל</h3>
+          <p class="services-intro-card-text">פופקורן, ברד, סוכר, קרפ, נקניקיות, נאצ'וס ותפוח אדמה טורנדו — כל הטעמים שאוהבים בעמדות צבעוניות ומזמינות שיהפכו כל אירוע לחוויה גסטרונומית אמיתית.</p>
+        </div>
+      </article>
+
+      <!-- Card 2: Inflatables -->
+      <article class="services-intro-card">
+        <div class="services-intro-card-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="24" cy="24" r="22" fill="#F3EEFF" stroke="var(--border-light)" stroke-width="1.5"></circle>
+            <ellipse cx="24" cy="28" rx="12" ry="8" fill="var(--secondary)" opacity="0.2"></ellipse>
+            <ellipse cx="24" cy="26" rx="10" ry="9" stroke="var(--secondary)" stroke-width="2.5" fill="none"></ellipse>
+            <path d="M18 26 Q20 18 24 16 Q28 18 30 26" stroke="var(--secondary)" stroke-width="2" stroke-linecap="round" fill="none"></path>
+            <circle cx="24" cy="14" r="3" fill="var(--secondary)" opacity="0.7"></circle>
+          </svg>
+        </div>
+        <div class="services-intro-card-body">
+          <h3 class="services-intro-card-title">מתנפחים ואטרקציות</h3>
+          <p class="services-intro-card-text">מתנפחים גדולים ומרשימים שמביאים את האנרגיה הקרנבלית לכל מגרש או חצר. בטיחות מלאה, צבעים עזים ושעות של כיף בלתי פוסק לילדים בכל גיל.</p>
+        </div>
+      </article>
+
+      <!-- Card 3: Atmosphere -->
+      <article class="services-intro-card">
+        <div class="services-intro-card-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="24" cy="24" r="22" fill="#E8FBF9" stroke="var(--border-light)" stroke-width="1.5"></circle>
+            <path d="M14 30 Q18 22 24 20 Q30 22 34 30" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
+            <circle cx="20" cy="18" r="3" fill="var(--accent)" opacity="0.7"></circle>
+            <circle cx="28" cy="16" r="2.5" fill="var(--primary)" opacity="0.6"></circle>
+            <circle cx="24" cy="13" r="2" fill="var(--secondary)" opacity="0.65"></circle>
+            <path d="M16 33 L32 33" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="services-intro-card-body">
+          <h3 class="services-intro-card-title">אווירה ועיצוב אירוע</h3>
+          <p class="services-intro-card-text">עיצוב חגיגי, צבעים, תאורה ואלמנטים שהופכים כל מקום לפסטיבל. אנחנו יוצרים את הסביבה שמרגישה כמו יום כיף מושלם — מהרגע הראשון ועד הסוף.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Bottom curved aqua divider -->
+  <div class="services-intro-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,50 Q150,20 300,42 T600,30 Q750,18 900,40 T1200,28 L1200,90 Z" fill="#FFF5E6" opacity="0.18"></path>
+      <path d="M0,90 L0,62 Q200,38 400,58 T800,44 Q1000,36 1200,55 L1200,90 Z" fill="#FFF5E6" opacity="0.28"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="services-menu-showcase-section" data-layout-spec="שירותים-menu-showcase" dir="rtl">
+  <!-- Decorative confetti dots top -->
+  <div class="sms-confetti-top" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <circle cx="30" cy="20" r="6" fill="#FF7A59" opacity="0.55"></circle>
+      <rect x="80" y="10" width="10" height="10" rx="2" fill="#8B5CF6" opacity="0.45" transform="rotate(20 85 15)"></rect>
+      <circle cx="150" cy="35" r="4" fill="#2DD4BF" opacity="0.5"></circle>
+      <rect x="220" y="8" width="8" height="8" rx="2" fill="#FF7A59" opacity="0.4" transform="rotate(-15 224 12)"></rect>
+      <circle cx="300" cy="25" r="5" fill="#8B5CF6" opacity="0.45"></circle>
+      <rect x="360" y="15" width="9" height="9" rx="2" fill="#2DD4BF" opacity="0.5" transform="rotate(30 365 20)"></rect>
+      <circle cx="60" cy="60" r="3" fill="#FF7A59" opacity="0.35"></circle>
+      <circle cx="200" cy="70" r="4" fill="#8B5CF6" opacity="0.3"></circle>
+      <rect x="330" y="55" width="7" height="7" rx="2" fill="#FF7A59" opacity="0.4" transform="rotate(10 334 59)"></rect>
+    </svg>
+  </div>
+
+  <div class="sms-container">
+    <!-- Section Header -->
+    <div class="sms-header">
+      <div class="sms-badge">🎪 תחנות אוכל</div>
+      <h2 class="sms-title">עולם הטעמים שלנו</h2>
+      <p class="sms-subtitle">כל אירוע מגיע עם ניחוחות שמחה! תחנות האוכל שלנו מוגשות טריות, צבעוניות ומשמחות — מנות שיגרמו לאורחים לחייך ולחזור שוב. מהפופקורן הפריך ועד הטורנדו הסוחף, אנחנו מביאים את הקרנבל אליכם.</p>
+    </div>
+
+    <!-- Cards Grid Row 1 -->
+    <div class="sms-grid">
+      <!-- Card 1: Popcorn -->
+      <article class="sms-card">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-1" data-context="Close-up of a colorful popcorn machine at a festive event, overflowing with fresh yellow and pink popcorn, carnival atmosphere, warm lighting, vibrant colors" width="600" height="400" src="/assets/site-services-menu-showcase-image-1.webp" alt="מכונת פופקורן צבעונית באירוע">
+          <div class="sms-card-badge">🍿 הכי אהוב</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">פופקורן</h3>
+          <p class="sms-card-desc">פריך, ריחני ומכור! מכונת הפופקורן שלנו מייצרת גרגרים מושלמים בטעמים שונים — חמאה קלאסית, קרמל ועוד.</p>
+        </div>
+      </article>
+
+      <!-- Card 2: Slushies -->
+      <article class="sms-card">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-2" data-context="Colorful slushy machine with vibrant blue, red and green frozen drinks, festive carnival event setup, refreshing summer vibe, bright colors" width="600" height="400" src="/assets/site-services-menu-showcase-image-2.webp" alt="מכונת ברד צבעונית">
+          <div class="sms-card-badge sms-badge-blue">🧊 מרענן</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">ברד קפוא</h3>
+          <p class="sms-card-desc">צבעוני, קר ומרענן! הברד שלנו מגיע בשלל טעמים ועושה את כל ילד (ומבוגר) מאושר בחום הקיץ.</p>
+        </div>
+      </article>
+
+      <!-- Card 3: Cotton Candy -->
+      <article class="sms-card">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-3" data-context="Fluffy pink and purple cotton candy being spun at a carnival event, magical dreamy texture, pastel colors, festive atmosphere, child holding cotton candy" width="600" height="400" src="/assets/site-services-menu-showcase-image-3.webp" alt="סוכר כותנה ורוד וסגול">
+          <div class="sms-card-badge sms-badge-pink">🩷 קסום</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">סוכר כותנה</h3>
+          <p class="sms-card-desc">ענן של מתיקות! סוכר הכותנה הפלאי שלנו בצבעים עדינים ומרהיבים — הצילום הכי יפה באירוע שלכם.</p>
+        </div>
+      </article>
+
+      <!-- Card 4: Crepes -->
+      <article class="sms-card">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-4" data-context="Fresh golden crepes being made on a hot griddle at an outdoor event, topped with Nutella and strawberries, appetizing food photography, festive setting" width="600" height="400" src="/assets/site-services-menu-showcase-image-4.webp" alt="קרפ זהוב עם ממרחים">
+          <div class="sms-card-badge sms-badge-yellow">🥞 טרי תמיד</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">קרפ</h3>
+          <p class="sms-card-desc">דק, זהוב ועשיר! הקרפ שלנו מוכן טרי במקום עם ממרחים מגוונים — נוטלה, גבינה, דבש ועוד.</p>
+        </div>
+      </article>
+
+      <!-- Card 5: Hot Dogs -->
+      <article class="sms-card">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-5" data-context="Juicy hot dogs in warm buns with colorful toppings at a festive outdoor event, carnival food station, appetizing and vibrant, ketchup and mustard" width="600" height="400" src="/assets/site-services-menu-showcase-image-5.webp" alt="נקניקיות עסיסיות עם תוספות">
+          <div class="sms-card-badge sms-badge-red">🌭 קלאסי</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">נקניקיות</h3>
+          <p class="sms-card-desc">קלאסיקה שלא נגמרת! נקניקיות עסיסיות בלחמנייה חמה עם כל התוספות — קטשופ, חרדל ועוד.</p>
+        </div>
+      </article>
+
+      <!-- Card 6: Nachos -->
+      <article class="sms-card">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-6" data-context="Crispy nachos with melted cheese sauce, salsa and jalapenos served at a festive event food station, colorful and appetizing, party atmosphere" width="600" height="400" src="/assets/site-services-menu-showcase-image-6.webp" alt="נאצ׳וס פריכים עם רטבים">
+          <div class="sms-card-badge sms-badge-orange">🧀 פריך</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">נאצ׳וס</h3>
+          <p class="sms-card-desc">פריכים, מלוחים ומגרים! נאצ׳וס זהובים עם רוטב גבינה חם, סלסה ועוד תוספות שמשגעות את כולם.</p>
+        </div>
+      </article>
+
+      <!-- Card 7: Tornado Potatoes -->
+      <article class="sms-card">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-7" data-context="Tornado potato spiral on a stick, crispy golden fried potato coiled around a skewer, sprinkled with seasoning, carnival street food, festive event" width="600" height="400" src="/assets/site-services-menu-showcase-image-7.webp" alt="תפוח אדמה טורנדו על שיפוד">
+          <div class="sms-card-badge sms-badge-green">🌀 הסנסציה</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">תפוח אדמה טורנדו</h3>
+          <p class="sms-card-desc">הסנסציה שכולם מצלמים! ספירלת תפוח האדמה הפריכה על שיפוד עם תיבולים מגוונים — מנה שעוצרת את הלב.</p>
+        </div>
+      </article>
+
+      <!-- Card 8: Special Treats -->
+      <article class="sms-card sms-card-featured">
+        <div class="sms-card-img-wrap">
+          <img data-placeholder="services-menu-showcase-image-8" data-context="Colorful assortment of carnival food treats spread on a festive table — popcorn, cotton candy, slushies, nachos together, celebration party food display, vibrant and joyful" width="600" height="400" src="/assets/site-services-menu-showcase-image-8.webp" alt="מגוון פינוקים קרנבל">
+          <div class="sms-card-badge sms-badge-purple">✨ הפתעות</div>
+        </div>
+        <div class="sms-card-body">
+          <h3 class="sms-card-title">פינוקים נוספים</h3>
+          <p class="sms-card-desc">כי כל אירוע הוא עולם בפני עצמו! אנחנו מתאימים את התפריט לאירוע שלכם ומוסיפים הפתעות מיוחדות שיגרמו לכולם לדבר.</p>
+          <a href="#contact" class="sms-cta-btn">בנו את התפריט שלכם ←</a>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Zigzag ribbon bottom divider -->
+  <div class="sms-zigzag-wrapper" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 L0,28 L50,8 L100,28 L150,8 L200,28 L250,8 L300,28 L350,8 L400,28 L450,8 L500,28 L550,8 L600,28 L650,8 L700,28 L750,8 L800,28 L850,8 L900,28 L950,8 L1000,28 L1050,8 L1100,28 L1150,8 L1200,28 L1200,60 Z" fill="#FFF4EC"></path>
+      <g opacity="1">
+        <polygon points="0,28 50,8 100,28" fill="#FF7A59" opacity="0.85"></polygon>
+        <polygon points="100,28 150,8 200,28" fill="#F4A62A" opacity="0.85"></polygon>
+        <polygon points="200,28 250,8 300,28" fill="#FF7A59" opacity="0.85"></polygon>
+        <polygon points="300,28 350,8 400,28" fill="#F4A62A" opacity="0.85"></polygon>
+        <polygon points="400,28 450,8 500,28" fill="#FF7A59" opacity="0.85"></polygon>
+        <polygon points="500,28 550,8 600,28" fill="#F4A62A" opacity="0.85"></polygon>
+        <polygon points="600,28 650,8 700,28" fill="#FF7A59" opacity="0.85"></polygon>
+        <polygon points="700,28 750,8 800,28" fill="#F4A62A" opacity="0.85"></polygon>
+        <polygon points="800,28 850,8 900,28" fill="#FF7A59" opacity="0.85"></polygon>
+        <polygon points="900,28 950,8 1000,28" fill="#F4A62A" opacity="0.85"></polygon>
+        <polygon points="1000,28 1050,8 1100,28" fill="#FF7A59" opacity="0.85"></polygon>
+        <polygon points="1100,28 1150,8 1200,28" fill="#F4A62A" opacity="0.85"></polygon>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<section class="services-capabilities-section" data-layout-spec="שירותים-capabilities" dir="rtl">
+  <!-- Purple blob accent decoration -->
+  <div class="scs-blob-accent" aria-hidden="true"></div>
+
+  <div class="scs-container">
+    <!-- Two-column layout: visual tiles on START (right in RTL), content on END (left in RTL) -->
+    <div class="scs-grid">
+
+      <!-- Visual Tiles Column (START = right in RTL) -->
+      <div class="scs-tiles-col">
+        <div class="scs-tiles-wrapper">
+          <!-- Large primary tile -->
+          <div class="scs-tile-large">
+            <img data-placeholder="services-capabilities-image-1" data-context="Colorful inflatable bounce house and slide at an outdoor Israeli event, children playing with excitement, vibrant carnival atmosphere, bright purple and orange colors, festive celebration setting, professional event photography" width="600" height="450" src="/assets/site-services-capabilities-image-1.webp" alt="מתנפחים וציוד בידור לאירועים">
+          </div>
+          <!-- Smaller peeking tile at bottom-start corner -->
+          <div class="scs-tile-small">
+            <img data-placeholder="services-capabilities-image-2" data-context="Close-up of a colorful event atmosphere setup with decorative lights and festive carnival decorations, purple and coral tones, Israeli family event, joyful mood, vibrant colors" width="280" height="200" src="/assets/site-services-capabilities-image-2.webp" alt="אווירה ועיצוב אירועים">
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Column (END = left in RTL) -->
+      <div class="scs-content-col">
+        <div class="scs-badge">מתנפחים ובידור</div>
+        <h2 class="scs-heading">כיף אמיתי לכל הגילאים — מתנפחים, אווירה ואנרגיה</h2>
+        <p class="scs-intro">מעבר לתחנות האוכל, Wow Show מביאה לאירוע שלכם את הרגשת הכיף הגדול — מתנפחים צבעוניים, עיצוב אווירה חגיגי, והמון אנרגיה שמחברת בין ילדים, הורים וכולם. כל הגדרה מותאמת לגודל ולאופי האירוע, מיום הולדת אינטימי ועד יום כיף גדול לחברה.</p>
+
+        <!-- Three capability blocks -->
+        <div class="scs-capabilities">
+          <div class="scs-cap-item">
+            <div class="scs-cap-icon">
+              <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="2"></circle>
+                <path d="M8 18 C8 12 12 8 14 8 C16 8 20 12 20 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M6 20 Q14 16 22 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <div class="scs-cap-content">
+              <h3 class="scs-cap-title">מתנפחים לכל גיל</h3>
+              <p class="scs-cap-desc">מגלשות ענקיות, טירות קפיצה ומסלולי הרפתקאות — מתנפחים איכותיים ובטיחותיים שהופכים כל מדשאה לפארק שעשועים. מושלם לימי הולדת, ימי עצמאות ואירועי שכונה.</p>
+            </div>
+          </div>
+
+          <div class="scs-cap-item">
+            <div class="scs-cap-icon">
+              <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M4 20 Q7 10 14 8 Q21 10 24 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                <circle cx="14" cy="6" r="3" stroke="currentColor" stroke-width="2"></circle>
+                <path d="M8 22 L20 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                <circle cx="9" cy="16" r="1.5" fill="currentColor"></circle>
+                <circle cx="14" cy="14" r="1.5" fill="currentColor"></circle>
+                <circle cx="19" cy="16" r="1.5" fill="currentColor"></circle>
+              </svg>
+            </div>
+            <div class="scs-cap-content">
+              <h3 class="scs-cap-title">עיצוב אווירה חגיגית</h3>
+              <p class="scs-cap-desc">אנחנו לא רק מציבים ציוד — אנחנו יוצרים חוויה. בלונים, עיטורים, תאורה צבעונית ופריסה חכמה שמעניקים לאירוע שלכם תחושת קרנבל אמיתי ואווירה שמחה שכולם ירגישו מרגע הכניסה.</p>
+            </div>
+          </div>
+
+          <div class="scs-cap-item">
+            <div class="scs-cap-icon">
+              <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="3" y="8" width="22" height="14" rx="3" stroke="currentColor" stroke-width="2"></rect>
+                <path d="M9 8 L9 6 Q9 4 11 4 L17 4 Q19 4 19 6 L19 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M10 15 L13 18 L18 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="scs-cap-content">
+              <h3 class="scs-cap-title">מתאים לאירועי חברה וקהילה</h3>
+              <p class="scs-cap-desc">ההגדרה הקומפקטית שלנו מתאימה גם לחצרות קטנות וגם לאולמות. אירועי חברה, ימי גיבוש, אירועי שכונה — הכל מנוהל על ידינו מקצה לקצה, כולל הגעה, הקמה וסידור.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom wave divider transitioning to next section (ivory/bg-light) -->
+  <div class="scs-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,45 Q100,20 200,42 T400,30 Q550,18 600,38 T800,28 Q950,18 1050,40 T1200,32 L1200,90 Z" fill="#FFF5E6"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="services-process-section" data-layout-spec="שירותים-process" dir="rtl">
+  <!-- Subtle paper texture overlay -->
+  <div class="services-process-texture" aria-hidden="true"></div>
+
+  <div class="services-process-container">
+    <!-- Section Header -->
+    <div class="services-process-header">
+      <h2 class="services-process-title">איך זה עובד? פשוט, כיפי ומדויק</h2>
+      <p class="services-process-subtitle">ארבעה שלבים קלים שהופכים כל אירוע לחוויה בלתי נשכחת — מהתכנון הראשוני ועד הרגע האחרון</p>
+    </div>
+
+    <!-- Steps Row -->
+    <div class="services-process-steps">
+
+      <!-- Connector Line (desktop) -->
+      <div class="services-process-connector" aria-hidden="true"></div>
+
+      <!-- Step 1 -->
+      <article class="services-process-step">
+        <div class="services-process-step-marker">
+          <span class="services-process-step-number">01</span>
+        </div>
+        <div class="services-process-step-content">
+          <h3 class="services-process-step-title">מבינים את האירוע שלכם</h3>
+          <p class="services-process-step-desc">כל אירוע הוא עולם בפני עצמו — יום הולדת, יום עצמאות, יום כיף לחברה. נשמע מכם, נבין את הקהל, הגיל, ומה הכי חשוב לכם שיקרה שם.</p>
+        </div>
+      </article>
+
+      <!-- Step 2 -->
+      <article class="services-process-step">
+        <div class="services-process-step-marker">
+          <span class="services-process-step-number">02</span>
+        </div>
+        <div class="services-process-step-content">
+          <h3 class="services-process-step-title">בוחרים את האטרקציות המושלמות</h3>
+          <p class="services-process-step-desc">מפופקורן ונקניקיות ועד ברד, קרפ, נאצ'וס ותפוח אדמה טורנדו — נבנה יחד תפריט אטרקציות שמתאים בדיוק לאירוע ולתקציב שלכם.</p>
+        </div>
+      </article>
+
+      <!-- Step 3 -->
+      <article class="services-process-step">
+        <div class="services-process-step-marker">
+          <span class="services-process-step-number">03</span>
+        </div>
+        <div class="services-process-step-content">
+          <h3 class="services-process-step-title">מקימים את האווירה החגיגית</h3>
+          <p class="services-process-step-desc">מגיעים מוקדם, מתקינים הכול — מתנפחים, עמדות אוכל, ציוד ותאורה. הכל מוכן לפני שהאורח הראשון מגיע, כך שאתם נהנים בלי דאגות.</p>
+        </div>
+      </article>
+
+      <!-- Step 4 -->
+      <article class="services-process-step">
+        <div class="services-process-step-marker">
+          <span class="services-process-step-number">04</span>
+        </div>
+        <div class="services-process-step-content">
+          <h3 class="services-process-step-title">חוויה חלקה לכל האורחים</h3>
+          <p class="services-process-step-desc">אנחנו שם לאורך כל האירוע — מנהלים, מגישים ומבטיחים שכל ילד ומבוגר יוצא עם חיוך. בסוף? מסדרים הכל ועוזבים כפי שהגענו.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Closing note -->
+    <p class="services-process-closing">כל אירוע הוא ייחודי — ואנחנו מתאימים את עצמנו בדיוק אליו. גמישים, יצירתיים ותמיד עם חיוך.</p>
+  </div>
+
+  <!-- Confetti fade bottom divider -->
+  <div class="services-process-confetti-divider" aria-hidden="true">
+    <!-- Scattered confetti shapes -->
+    <svg class="services-process-confetti-svg" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Confetti dots and rectangles fading toward bottom -->
+      <rect x="80" y="10" width="10" height="6" rx="2" fill="#FF7A59" opacity="0.55" transform="rotate(20 80 10)"></rect>
+      <circle cx="200" cy="25" r="5" fill="#8B5CF6" opacity="0.45"></circle>
+      <rect x="340" y="8" width="8" height="5" rx="1" fill="#2DD4BF" opacity="0.5" transform="rotate(-15 340 8)"></rect>
+      <circle cx="480" cy="18" r="4" fill="#FF7A59" opacity="0.4"></circle>
+      <rect x="600" y="12" width="10" height="5" rx="2" fill="#8B5CF6" opacity="0.5" transform="rotate(30 600 12)"></rect>
+      <circle cx="720" cy="22" r="6" fill="#2DD4BF" opacity="0.38"></circle>
+      <rect x="860" y="6" width="9" height="5" rx="1" fill="#FF7A59" opacity="0.45" transform="rotate(-25 860 6)"></rect>
+      <circle cx="980" cy="20" r="4" fill="#8B5CF6" opacity="0.4"></circle>
+      <rect x="1100" y="14" width="8" height="6" rx="2" fill="#2DD4BF" opacity="0.5" transform="rotate(18 1100 14)"></rect>
+      <!-- Sparser row -->
+      <rect x="140" y="45" width="7" height="4" rx="1" fill="#8B5CF6" opacity="0.3" transform="rotate(10 140 45)"></rect>
+      <circle cx="310" cy="55" r="3" fill="#FF7A59" opacity="0.25"></circle>
+      <rect x="530" y="48" width="6" height="4" rx="1" fill="#2DD4BF" opacity="0.28" transform="rotate(-20 530 48)"></rect>
+      <circle cx="750" cy="52" r="4" fill="#FF7A59" opacity="0.22"></circle>
+      <rect x="940" y="50" width="7" height="4" rx="1" fill="#8B5CF6" opacity="0.25" transform="rotate(15 940 50)"></rect>
+      <!-- Very sparse bottom row -->
+      <circle cx="260" cy="82" r="3" fill="#2DD4BF" opacity="0.15"></circle>
+      <rect x="650" y="80" width="6" height="3" rx="1" fill="#FF7A59" opacity="0.12" transform="rotate(8 650 80)"></rect>
+      <circle cx="1050" cy="85" r="3" fill="#8B5CF6" opacity="0.12"></circle>
+      <!-- Wave path filling bottom to match next section -->
+      <path d="M0,120 L0,90 Q100,82 200,90 T400,86 Q500,90 600,84 T800,88 Q900,84 1000,90 T1200,86 L1200,120 Z" fill="#3B245A"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="services-cta-section" data-layout-spec="שירותים-cta" dir="rtl">
+  <!-- Confetti decorations -->
+  <div class="services-cta-confetti services-cta-confetti--right" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" width="220" height="260" viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="180" y="12" width="10" height="18" rx="3" fill="#FF7A59" opacity="0.55" transform="rotate(20 180 12)"></rect>
+      <circle cx="200" cy="55" r="6" fill="#8B5CF6" opacity="0.45"></circle>
+      <rect x="155" y="70" width="8" height="14" rx="2" fill="#2DD4BF" opacity="0.5" transform="rotate(-15 155 70)"></rect>
+      <circle cx="210" cy="110" r="4" fill="#FF7A59" opacity="0.4"></circle>
+      <rect x="170" y="140" width="12" height="8" rx="2" fill="#8B5CF6" opacity="0.45" transform="rotate(35 170 140)"></rect>
+      <circle cx="190" cy="180" r="5" fill="#2DD4BF" opacity="0.4"></circle>
+      <rect x="140" y="200" width="9" height="16" rx="3" fill="#FF7A59" opacity="0.5" transform="rotate(-25 140 200)"></rect>
+      <circle cx="205" cy="230" r="7" fill="#8B5CF6" opacity="0.35"></circle>
+      <rect x="160" y="240" width="7" height="12" rx="2" fill="#2DD4BF" opacity="0.45" transform="rotate(10 160 240)"></rect>
+    </svg>
+  </div>
+  <div class="services-cta-confetti services-cta-confetti--left" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" width="220" height="260" viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="18" width="10" height="18" rx="3" fill="#8B5CF6" opacity="0.5" transform="rotate(-20 20 18)"></rect>
+      <circle cx="10" cy="60" r="6" fill="#FF7A59" opacity="0.4"></circle>
+      <rect x="40" y="80" width="8" height="14" rx="2" fill="#2DD4BF" opacity="0.45" transform="rotate(18 40 80)"></rect>
+      <circle cx="8" cy="120" r="4" fill="#8B5CF6" opacity="0.4"></circle>
+      <rect x="30" y="150" width="12" height="8" rx="2" fill="#FF7A59" opacity="0.5" transform="rotate(-30 30 150)"></rect>
+      <circle cx="18" cy="190" r="5" fill="#2DD4BF" opacity="0.4"></circle>
+      <rect x="50" y="210" width="9" height="16" rx="3" fill="#8B5CF6" opacity="0.45" transform="rotate(22 50 210)"></rect>
+      <circle cx="12" cy="245" r="7" fill="#FF7A59" opacity="0.35"></circle>
+      <rect x="38" y="235" width="7" height="12" rx="2" fill="#2DD4BF" opacity="0.5" transform="rotate(-12 38 235)"></rect>
+    </svg>
+  </div>
+
+  <div class="services-cta-inner">
+    <div class="services-cta-panel">
+      <div class="services-cta-content">
+        <span class="services-cta-badge">✨ בואו נתחיל לתכנן</span>
+        <h2 class="services-cta-heading">מה יהיה בארוע שלכם?</h2>
+        <p class="services-cta-text">פופקורן, ברד, סוכר גבישי, קרפים, נקניקיות, מתנפחים ואווירה של קרנבל — אנחנו כאן כדי להרכיב את החבילה המושלמת לאירוע שלכם. משפחות, ימי הולדת, ימי עצמאות ואירועי חברה — כל אירוע מקבל את ה-Wow שהוא ראוי לו.</p>
+        <a href="/contact" class="services-cta-btn">דברו איתנו עכשיו <i class="fa-solid fa-arrow-left"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl">
+  <div class="footer-top">
+    <div class="footer-container">
+      <div class="footer-grid">
+
+        <!-- Column 1: Company Info -->
+        <div class="footer-col footer-brand">
+          <a href="/" class="footer-logo-link">
+            <img src="/assets/wow-show-logo.webp" alt="Wow show" class="logo">
+          </a>
+          <p class="footer-tagline">חוויות בידור ואירועים שלא נשכחים — אנחנו מביאים את הקסם אליכם!</p>
+          <div class="footer-social">
+            <a href="[facebook_handle]" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="[instagram_handle]" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="[whatsapp_handle]" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-col">
+          <h3 class="footer-heading"><span class="heading-dot"></span>ניווט מהיר</h3>
+          <ul class="footer-links">
+            <li><a href="/services"><i class="fas fa-chevron-left"></i>שירותים</a></li>
+            <li><a href="/about"><i class="fas fa-chevron-left"></i>אודות</a></li>
+            <li><a href="/contact"><i class="fas fa-chevron-left"></i>צור קשר</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Contact Info -->
+        <div class="footer-col">
+          <h3 class="footer-heading"><span class="heading-dot"></span>צור קשר</h3>
+          <ul class="footer-contact">
+            <li>
+              <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+              <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span>
+            </li>
+            <li>
+              <span class="contact-icon"><i class="fas fa-phone"></i></span>
+              <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span>
+            </li>
+            <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+              <span class="contact-text">[business_address]</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Decorative / CTA -->
+        <div class="footer-col footer-cta-col">
+          <div class="footer-cta-card">
+            <div class="cta-emoji">🎉</div>
+            <p class="cta-text">רוצים לתכנן אירוע מושלם?</p>
+            <a href="/contact" class="cta-btn">בואו נדבר!</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-divider-wrap">
+    <svg class="footer-wave" viewBox="0 0 1200 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,15 C200,30 400,0 600,15 C800,30 1000,0 1200,15 L1200,30 L0,30 Z" fill="rgba(255,255,255,0.05)"></path>
+    </svg>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-row">
+        <p class="footer-copyright">© 2026 Wow show. כל הזכויות שמורות.</p>
+        <div class="footer-legal">
+          <a href="/privacy">מדיניות פרטיות</a>
+          <span class="legal-sep">·</span>
+          <a href="/terms">תנאי שימוש</a>
+          <span class="legal-sep">·</span>
+          <a href="/accessibility">נגישות</a>
+          <span class="legal-sep">·</span>
+          <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body>
+</html>

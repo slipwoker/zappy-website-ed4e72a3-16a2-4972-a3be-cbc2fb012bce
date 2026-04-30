@@ -1,0 +1,47 @@
+# Business — Generative Engine Optimization Map
+
+---
+
+## Pages
+
+### בית
+https://example.com
+Wow show מביאים את הקסם אליכם! תחנות אוכל, מתנפחים ובידור מושלם לימי הולדת, אירועים משפחתיים ויום כיף שהילדים לעולם לא ישכחו. הזמינו עכשיו!
+
+### שירותים
+https://example.com/services
+פופקורן, סלאשי, כותנת סוכר, נאצ&#39;וס, קריפס וטורנדו פטייטס — תחנות האוכל של Wow show הופכות כל אירוע לקרנבל צבעוני ומרגש. גלו את כל החבילות שלנו!
+
+### אודות
+https://example.com/about
+אנחנו ב-Wow show מאמינים שכל אירוע ראוי להפוך לזיכרון. למדו מי אנחנו, מה מניע אותנו ולמה אלפי משפחות בחרו בנו להפוך את החגיגה שלהן לבלתי נשכחת.
+
+### צור קשר
+https://example.com/contact
+רוצים להפוך את האירוע הבא שלכם לחוויה מדהימה? צרו קשר עם צוות Wow show עכשיו — נשמח לתאם, להתאים ולהגיע אליכם עם כל הקסם ישירות לחצר!
+
+## Legal & Policy
+
+### Privacy Policy
+https://example.com/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://example.com/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://example.com/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+# Business Context (for LLM understanding)
+
+## About Business
+---
+
+# Additional Resources
+
+- **Sitemap**: https://example.com/sitemap.xml
+- **Robots.txt**: https://example.com/robots.txt
